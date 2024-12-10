@@ -6,7 +6,6 @@ export class AppExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-
     // Handle MySQL duplicate entry error
     if (exception.code === 'ER_DUP_ENTRY') {
       response.status(409).json({

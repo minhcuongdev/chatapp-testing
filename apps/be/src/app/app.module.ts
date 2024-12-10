@@ -28,11 +28,7 @@ import { UsersModule } from './modules/user/user.module';
     {
       provide: APP_FILTER,
       useClass: AppExceptionFilter,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    }
   ],
 })
 export class AppModule {}

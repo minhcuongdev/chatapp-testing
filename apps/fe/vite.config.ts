@@ -7,16 +7,16 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 export default defineConfig({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/fe',
-  // server: {
-  //   port: 4200,
-  //   host: 'localhost',
-  //   proxy: {
-  //     '^/api|^/file': {
-  //       target: 'http://localhost:3000',
-  //       changeOrigin: true,
-  //     },
-  //   },
-  // },
+  server: {
+    port: 4200,
+    host: 'localhost',
+    proxy: {
+      '^/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+  },
   preview: {
     port: 4300,
     host: 'localhost',

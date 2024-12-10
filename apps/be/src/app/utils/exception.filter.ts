@@ -16,6 +16,16 @@ export class AppExceptionFilter implements ExceptionFilter {
       return;
     }
 
+
+    if(exception.message === "Invalid credentials") {
+      response.status(401).json({
+        statusCode: 401,
+        message: exception.message,
+        error: 'Auth Error',
+      });
+      return
+    }
+
     // Default behavior for unhandled exceptions
     response.status(500).json({
       statusCode: 500,

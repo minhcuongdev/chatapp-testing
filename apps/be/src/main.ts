@@ -11,7 +11,6 @@ import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3000;
@@ -21,7 +20,6 @@ async function bootstrap() {
     .setTitle('Auth API')
     .setDescription('API for Authentication')
     .setVersion('1.0')
-    .addBearerAuth() // Optional: Adds Bearer token for JWT auth
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

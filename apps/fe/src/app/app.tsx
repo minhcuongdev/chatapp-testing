@@ -1,12 +1,12 @@
 // Uncomment this line to use CSS modules
 // import styles from './app.module.scss';
-import NxWelcome from './nx-welcome';
+import { RouterProvider } from 'react-router-dom';
+import { router } from '../pages/routes';
 
 export function App() {
   return (
-    <div>
-      <NxWelcome title="fe" />
-    </div>
+    <RouterProvider router={router} />
+
   );
 }
 

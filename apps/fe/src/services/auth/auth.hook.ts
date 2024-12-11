@@ -5,7 +5,6 @@ import { ConfigMutation } from '../../types/response';
 export const useLogin = (config?: ConfigMutation<TLogin>) => {
   return useMutation({
     mutationFn: (params: TLogin) => {
-      console.log(params);
       return auth.login(params);
     },
     ...config,

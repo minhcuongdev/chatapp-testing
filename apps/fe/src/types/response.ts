@@ -19,7 +19,9 @@ export interface ErrorResponse {
     message: string;
   };
 }
-export type ActionResponse = SuccessResponse<number | string | boolean>;
+export type ActionResponse = SuccessResponse<{
+  userId: number;
+}>;
 
 export type ConfigMutation<
   FieldPayload = unknown,

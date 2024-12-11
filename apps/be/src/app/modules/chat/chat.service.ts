@@ -10,7 +10,7 @@ export class ChatService {
   constructor(
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Room) private roomRepo: Repository<Room>,
-    @InjectRepository(Message) private messageRepo: Repository<Message> // Inject message repository
+    @InjectRepository(Message) private messageRepo: Repository<Message>, // Inject message repository
   ) {}
 
   async createRoom(user1Id: number, user2Id: number): Promise<Room> {
@@ -57,7 +57,7 @@ export class ChatService {
   async sendMessage(
     roomId: number,
     userId: number,
-    content: string
+    content: string,
   ): Promise<Message> {
     const room = await this.roomRepo.findOne({
       where: { id: roomId },
@@ -83,10 +83,17 @@ export class ChatService {
   }
 
   async getMessagesInRoom(roomId: number): Promise<Message[]> {
-    return this.messageRepo.find({
+    const messages = await this.messageRepo.find({
       where: { room: { id: roomId } },
       relations: ['user'],
       order: { createdAt: 'ASC' },
     });
+
+    const newMessages = messages.map((message) => {
+      delete message.user.password;
+      return message;
+    });
+
+    return newMessages;
   }
 }

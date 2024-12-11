@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom"
+import { Outlet } from 'react-router-dom';
 
 const LayoutRoot = () => {
   return (
-    <div className="w-[70%] mx-auto h-screen">
+    <div className="mx-auto h-screen w-[70%] bg-blue-300">
       <Outlet />
     </div>
-  )
-}
+  );
+};
 
-export default LayoutRoot
+export default LayoutRoot;

@@ -10,7 +10,7 @@ import { RegisterDto } from './auth.dto';
 export class AuthService {
   constructor(
     @InjectRepository(User) private userRepo: Repository<User>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   async register(dto: RegisterDto): Promise<void> {
@@ -23,7 +23,10 @@ export class AuthService {
     await this.userRepo.save(user);
   }
 
-  async login(email: string, password: string): Promise<{ token: string }> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ token: string; id: number }> {
     const user = await this.userRepo.findOne({ where: { email } });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
@@ -32,6 +35,6 @@ export class AuthService {
     const token = this.jwtService.sign(payload, {
       secret: 'secret',
     });
-    return { token };
+    return { token, id: user.id };
   }
 }

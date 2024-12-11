@@ -1,4 +1,3 @@
-import { ActionFunction } from 'react-router-dom';
 import apiServices from '../../configs/axios';
 import { ActionResponse, Response } from '../../types/response';
 

@@ -6,11 +6,17 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway({
+  cors: {
+    origin: 'http://localhost:4200',
+  },
+  cookie: true,
+})
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -24,18 +30,25 @@ export class ChatGateway
 
   async handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);
-    const rooms = await this.chatService.getRoomsByUserId(Number(client.id));
-    this.server.emit('rooms', rooms);
   }
 
   handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
   }
 
+  @SubscribeMessage('getRooms')
+  async handleGetRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { userId: number },
+  ) {
+    const rooms = await this.chatService.getRoomsByUserId(Number(data.userId));
+    client.emit('rooms', rooms);
+  }
+
   @SubscribeMessage('createRoom')
   async handleCreateRoom(
-    client: Socket,
-    @MessageBody() data: { userId1: number; userId2: number }
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { userId1: number; userId2: number },
   ) {
     await this.chatService.createRoom(data.userId1, data.userId2);
     const rooms = await this.chatService.getRoomsByUserId(Number(client.id));
@@ -44,8 +57,8 @@ export class ChatGateway
 
   @SubscribeMessage('joinRoom')
   async handleJoinRoom(
-    client: Socket,
-    @MessageBody() data: { roomId: number }
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { roomId: number },
   ) {
     client.join(`room-${data.roomId}`);
 
@@ -54,24 +67,20 @@ export class ChatGateway
 
   @SubscribeMessage('sendMessage')
   async handleSendMessage(
-    client: Socket,
-    @MessageBody() data: { roomId: number; userId: number; message: string }
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { roomId: number; userId: number; message: string },
   ) {
-    const message = await this.chatService.sendMessage(
-      data.roomId,
-      data.userId,
-      data.message
-    );
-
-    this.server.to(`room-${data.roomId}`).emit('newMessage', message);
+    await this.chatService.sendMessage(data.roomId, data.userId, data.message);
+    const messages = await this.chatService.getMessagesInRoom(data.roomId);
+    this.server.emit('messages', messages);
   }
 
   @SubscribeMessage('getMessagesInRoom')
   async handleGetMessagesInRoom(
-    client: Socket,
-    @MessageBody() data: { roomId: number }
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { roomId: number },
   ) {
     const messages = await this.chatService.getMessagesInRoom(data.roomId);
-    client.emit('messages', messages);
+    this.server.emit('messages', messages);
   }
 }

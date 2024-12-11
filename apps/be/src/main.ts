@@ -14,7 +14,10 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3000;
-
+  app.enableCors({
+    origin: 'http://localhost:4200', // Your frontend domain
+    credentials: true, // Allow sending cookies
+  });
   app.use(cookieParser());
   const config = new DocumentBuilder()
     .setTitle('Auth API')

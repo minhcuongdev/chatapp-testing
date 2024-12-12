@@ -4,9 +4,10 @@
   "license": "MIT",
   "scripts": {
     "fe:dev": "nx serve fe",
-    "be:dev": "nx serve be",
     "fe:test": "nx test:fe fe",
-    "fe:test:e2e": "nx e2e fe-e2e --ui "
+    "fe:test:e2e": "nx e2e fe-e2e --ui",
+    "be:dev": "nx serve be",
+    "be:test": "nx test be"
   },
   "private": true,
   "dependencies": {

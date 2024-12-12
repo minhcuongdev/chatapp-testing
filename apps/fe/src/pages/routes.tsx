@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, redirect } from 'react-router-dom';
 import LayoutRoot from '../_layouts/root';
 import Login from './login';
 import Register from './register';
@@ -17,6 +17,12 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
+        loader: () => {
+          if (!sessionStorage.getItem('userId')) {
+            return redirect(`/login`);
+          }
+          return redirect(`/chat`);
+        },
         element: <div>Home Page</div>,
       },
 
@@ -32,6 +38,12 @@ export const router = createBrowserRouter([
   },
   {
     element: <Chat />,
+    loader: () => {
+      if (!sessionStorage.getItem('userId')) {
+        return redirect(`/login`);
+      }
+      return null;
+    },
     path: PATH.CHAT,
   },
   {

@@ -18,11 +18,28 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
-root.render(
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
-  </QueryClientProvider>,
-);
+if (import.meta.env.MODE === 'e2e') {
+  import('./__mocks__/browser')
+    .then(async ({ worker }) => {
+      await worker.start();
+    })
+    .then(() => {
+      root.render(
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <App />
+          </ThemeProvider>
+        </QueryClientProvider>,
+      );
+    });
+} else {
+  root.render(
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </QueryClientProvider>,
+  );
+}

@@ -20,7 +20,7 @@
       "plugin": "@nx/vite/plugin",
       "options": {
         "buildTargetName": "build",
-        "testTargetName": "test",
+        "testTargetName": "test:fe",
         "serveTargetName": "serve",
         "previewTargetName": "preview",
         "serveStaticTargetName": "serve-static",
@@ -58,6 +58,14 @@
   "targetDefaults": {
     "e2e-ci--**/*": {
       "dependsOn": ["^build"]
+    }
+  },
+  "targets": {
+    "test:fe": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "passWithNoTests": true
+      }
     }
   },
   "generators": {

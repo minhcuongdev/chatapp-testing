@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
-import RowStack from './row-stack';
 import { Avatar, Box, Typography } from '@mui/material';
 import { blue } from '@mui/material/colors';
+import { FC } from 'react';
+import RowStack from './row-stack';
 
 export interface MessageProps {
   avatar: string;
@@ -22,8 +22,8 @@ export const Message: FC<MessageProps> = (props) => {
       <Box
         sx={{
           backgroundColor: props.owner ? blue[200] : 'white',
-          padding: '12px',
           borderRadius: '12px',
+          padding: '12px',
         }}
       >
         <Typography>{props.message}</Typography>

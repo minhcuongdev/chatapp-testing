@@ -1,16 +1,20 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { useLogin } from '../../services/auth/auth.hook';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useLogin } from '../../services/auth/auth.hook';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
   const loginMutation = useLogin({
     onSuccess: (res) => {
       sessionStorage.setItem('userId', res.data.userId.toString());
       navigate('/chat');
+    },
+    onError: () => {
+      toast.error('Login error');
     },
   });
 
@@ -58,6 +62,7 @@ const Login = () => {
           </div>
           <div>
             <button
+              data-testid="login"
               onClick={handleSubmit}
               className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >

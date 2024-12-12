@@ -1,5 +1,5 @@
 import apiServices from '../../configs/axios';
-import { ActionResponse, Response } from '../../types/response';
+import { ActionResponse } from '../../types/response';
 
 export type TLogin = {
   email: string;

@@ -81,6 +81,6 @@ export class ChatGateway
     @MessageBody() data: { roomId: number },
   ) {
     const messages = await this.chatService.getMessagesInRoom(data.roomId);
-    this.server.emit('messages', messages);
+    client.emit('messages', messages);
   }
 }

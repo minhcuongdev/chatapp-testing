@@ -5,15 +5,17 @@ import RowStack from '../../components/row-stack';
 import SideBar from '../../components/side-bar';
 import { Room } from '../../data/room.response';
 import { socket } from '../../socket';
+import { Message } from '../../data/message.response';
 
 const Chat = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [prams] = useSearchParams();
-  const [roomSelected, setRoomSelected] = useState<number>(-1);
+
+  const userId = Number(sessionStorage.getItem('userId'));
 
   useEffect(() => {
     socket.connect();
-    const userId = Number(sessionStorage.getItem('userId'));
     socket.emit('getRooms', {
       userId: userId,
     });
@@ -22,14 +24,28 @@ const Chat = () => {
       setRooms(data);
     });
 
+    socket.on('messages', (data) => {
+      setMessages(data);
+    });
+
     return () => {
       socket.off('rooms');
+      socket.off('messages');
     };
   }, []);
 
   useEffect(() => {
-    setRoomSelected(Number(prams.get('room')));
+    const roomId = Number(prams.get('room'));
+    socket.emit('getMessagesInRoom', { roomId });
   }, [prams]);
+
+  const handleSendMessage = (text: string) => {
+    socket.emit('sendMessage', {
+      roomId: Number(prams.get('room')),
+      userId: userId,
+      message: text,
+    });
+  };
 
   return (
     <RowStack
@@ -40,7 +56,7 @@ const Chat = () => {
       }}
     >
       <SideBar list={rooms} />
-      <Conversation roomId={roomSelected} />
+      <Conversation messages={messages} onSend={handleSendMessage} />
     </RowStack>
   );
 };

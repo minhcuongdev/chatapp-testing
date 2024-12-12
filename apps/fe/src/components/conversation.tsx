@@ -1,3 +1,4 @@
+import SendIcon from '@mui/icons-material/Send';
 import {
   IconButton,
   InputAdornment,
@@ -5,47 +6,26 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { Messages } from './messages';
-import { FC, useEffect, useState } from 'react';
-import { socket } from '../socket';
-import SendIcon from '@mui/icons-material/Send';
+import { FC, useState } from 'react';
 import { Message } from '../data/message.response';
+import { Messages } from './messages';
 
 interface ConversationProps {
-  roomId: number;
+  messages: Message[];
+  onSend: (text: string) => void;
 }
 
 export const Conversation: FC<ConversationProps> = (props) => {
   const [text, setText] = useState('');
-  const [messages, setMessages] = useState<Message[]>([]);
-  const userId = Number(sessionStorage.getItem('userId'));
-
-  useEffect(() => {
-    socket.on('messages', (data) => {
-      setMessages(data);
-    });
-
-    return () => {
-      socket.off('messages');
-    };
-  }, []);
-
-  useEffect(() => {
-    socket.emit('getMessagesInRoom', { roomId: props.roomId });
-  }, [props.roomId]);
 
   const handleSendMessage = () => {
-    socket.emit('sendMessage', {
-      roomId: props.roomId,
-      userId: userId,
-      message: text,
-    });
+    props.onSend(text);
     setText('');
   };
 
   return (
     <Stack flex={1} height="100%" paddingLeft={2}>
-      <Messages list={messages} />
+      <Messages list={props.messages} />
       <Paper sx={{ borderRadius: '16px' }}>
         <TextField
           value={text}

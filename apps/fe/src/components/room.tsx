@@ -10,11 +10,12 @@ export interface RoomProps {
   lastMessage?: string;
   online?: boolean;
   onClick: () => void;
+  selected: boolean;
 }
 
 export const Room: FC<RoomProps> = (props) => {
   return (
-    <MenuItem onClick={props.onClick}>
+    <MenuItem onClick={props.onClick} selected={props.selected}>
       <RowStack gap={2}>
         <StyledBadge
           overlap="circular"

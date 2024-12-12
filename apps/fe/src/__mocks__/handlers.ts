@@ -23,4 +23,9 @@ export const handlers = [
       message: 'User registered successfully',
     });
   }),
+  http.get('/getId', () => {
+    return HttpResponse.json({
+      message: 'Get Id successfully',
+    });
+  }),
 ];
